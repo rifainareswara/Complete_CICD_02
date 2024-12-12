@@ -37,19 +37,19 @@ pipeline {
 			}
 		}
 		stage('SonarQube Analysis') {
-    			environment {
-        		SCANNER_HOME = tool 'SonarQubeScanner'
-    			}
-    			steps {
-        			withSonarQubeEnv(credentialsId: 'sonar-analysis') {
-            			sh '''
-                		$SCANNER_HOME/bin/sonar-scanner \
-                		-Dsonar.projectKey=cicdsonar \
-                		-Dsonar.sources=.
-            			'''
-        			}
-    			}
-		}
+            		steps {
+                		withSonarQubeEnv(installationName: 'SonarQube', credentialsId: 'sonar-analysis') {
+                    		sh '''
+                        		${SONAR_SCANNER_HOME}/bin/sonar-scanner \
+                        		-Dsonar.projectKey=${SONAR_PROJECT_KEY} \
+                        		-Dsonar.projectName=${SONAR_PROJECT_NAME} \
+                        		-Dsonar.sources=. \
+                        		-Dsonar.host.url=https://sonar.jobseeker.software \
+                        		-Dsonar.scm.disabled=true
+                    		'''
+                		}
+            		}
+        	}
 		// stage('Docker Image'){
 		// 	steps {
 		// 		script {
