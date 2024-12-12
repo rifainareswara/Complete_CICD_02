@@ -37,18 +37,16 @@ pipeline {
 			}
 		}
 		stage('SonarQube Analysis') {
+    			environment {
+        		SCANNER_HOME = tool 'SonarQubeScanner'
+    			}
     			steps {
-        			withCredentials([string(credentialsId: 'jenkins-analysis', variable: 'SONAR_TOKEN')]) {
-            			withSonarQubeEnv('SonarQube') {
-                			sh '''
-                    			${SONAR_SCANNER_HOME}/bin/sonar-scanner \
-                   		 	-Dsonar.projectKey=cicdsonar \
-  					-Dsonar.sources=. \
-  					-Dsonar.host.url=https://sonar.jobseeker.software \
-  					-Dsonar.token=sqp_644e5560df03973263a7ca515b75c67ee5bcafe2
-		       			-X
-                			'''
-            				}
+        			withSonarQubeEnv(credentialsId: 'sonar-analysis') {
+            			sh '''
+                		$SCANNER_HOME/bin/sonar-scanner \
+                		-Dsonar.projectKey=cicdsonar \
+                		-Dsonar.sources=.
+            			'''
         			}
     			}
 		}
