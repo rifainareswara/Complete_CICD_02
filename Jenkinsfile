@@ -39,15 +39,17 @@ pipeline {
 		stage('SonarQube Analysis'){
     			steps {
         			withCredentials([string(credentialsId: 'sonar-jenkins', variable: 'SONAR_TOKEN')]) {
-            			withSonarQubeEnv('SonarQube') {
-                			sh """
-                			${SONAR_SCANNER_HOME}/bin/sonar-scanner \
-                			-Dsonar.projectKey=${SONAR_PROJECT_KEY} \
-                			-Dsonar.projectName=${SONAR_PROJECT_NAME} \
-                			-Dsonar.sources=. \
-                			-Dsonar.host.url=https://sonar.jobseeker.software \
-                			-Dsonar.login=${SONAR_TOKEN}
-                			"""
+            			            withSonarQubeEnv('SonarQube') {
+                				sh """
+                				${SONAR_SCANNER_HOME}/bin/sonar-scanner \
+                				-Dsonar.projectKey=${SONAR_PROJECT_KEY} \
+                				-Dsonar.projectName=${SONAR_PROJECT_NAME} \
+               					-Dsonar.sources=. \
+                				-Dsonar.host.url=https://sonar.jobseeker.software \
+                				-Dsonar.login=${SONAR_TOKEN} \
+                				-Dsonar.qualitygate.wait=true \
+                				-Dsonar.project.settings= \
+                				"""
             				}
         			}
     			}
