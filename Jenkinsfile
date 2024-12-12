@@ -6,7 +6,7 @@ pipeline {
 		nodejs 'NodeJS'
 	}
 	environment {
-		SONAR_PROJECT_KEY = 'sonar-jenkins'
+		SONAR_PROJECT_KEY = 'cicdsonar'
 		SONAR_SCANNER_HOME = tool 'SonarQubeScanner'	
     		SONAR_PROJECT_NAME = 'cicdsonar'
 		JOB_NAME_NOW = 'cicd02'
@@ -38,17 +38,20 @@ pipeline {
 		}
 		stage('SonarQube Analysis') {
     			steps {
-        			withCredentials([string(credentialsId: 'sonar-jenkins', variable: 'SONAR_TOKEN')]) {
+        			withCredentials([string(credentialsId: 'jenkins-analysis', variable: 'SONAR_TOKEN')]) {
             			withSonarQubeEnv('SonarQube') {
                 			sh '''
                     			${SONAR_SCANNER_HOME}/bin/sonar-scanner \
-                    			-Dsonar.projectKey=cicdsonar \
+                   		 	-Dsonar.projectKey=cicdsonar \
                     			-Dsonar.projectName=cicdsonar \
                     			-Dsonar.sources=. \
                     			-Dsonar.host.url=https://sonar.jobseeker.software \
                     			-Dsonar.token=$SONAR_TOKEN \
                     			-Dsonar.qualitygate.wait=true \
-		       			-Dsonar.verbose=true
+                    			-Dsonar.scm.disabled=true \
+                    			-Dsonar.exclusions=node_modules/**,dist/**,coverage/** \
+                    			-Dsonar.javascript.node.maxspace=8192 \
+                   			 -Dsonar.forceAuthentication=true
 		       			-X
                 			'''
             				}
