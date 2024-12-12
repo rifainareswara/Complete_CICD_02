@@ -8,7 +8,7 @@ pipeline {
 	environment {
 		SONAR_PROJECT_KEY = 'sonar-jenkins'
 		SONAR_SCANNER_HOME = tool 'SonarQubeScanner'	
-    		SONAR_PROJECT_NAME = 'cicdtest'
+    		SONAR_PROJECT_NAME = 'cicdsonar'
 		JOB_NAME_NOW = 'cicd02'
 		ECR_REPO = 'iquantawsrepo'
 		IMAGE_TAG = 'latest'
