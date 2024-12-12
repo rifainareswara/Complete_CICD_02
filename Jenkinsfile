@@ -47,7 +47,9 @@ pipeline {
                     			-Dsonar.sources=. \
                     			-Dsonar.host.url=https://sonar.jobseeker.software \
                     			-Dsonar.token=$SONAR_TOKEN \
-                    			-Dsonar.qualitygate.wait=true
+                    			-Dsonar.qualitygate.wait=true \
+		       			-Dsonar.verbose=true
+		       			-X
                 			'''
             				}
         			}
