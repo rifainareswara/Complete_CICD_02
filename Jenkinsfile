@@ -38,7 +38,7 @@ pipeline {
 		}
 		stage('SonarQube Analysis') {
             		steps {
-                		withSonarQubeEnv(installationName: 'SonarQube', credentialsId: 'sonar-analysis') {
+                		withSonarQubeEnv(installationName: 'SonarQube', credentialsId: 'jenkins-analysis') {
                     		sh '''
                         		${SONAR_SCANNER_HOME}/bin/sonar-scanner \
                         		-Dsonar.projectKey=${SONAR_PROJECT_KEY} \
