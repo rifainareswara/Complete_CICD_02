@@ -46,7 +46,7 @@ pipeline {
                     			-Dsonar.projectName=cicdsonar \
                     			-Dsonar.sources=. \
                     			-Dsonar.host.url=https://sonar.jobseeker.software \
-                    			-Dsonar.token=$SONAR_TOKEN \
+                    			-Dsonar.login=$SONAR_TOKEN \
                     			-Dsonar.qualitygate.wait=true \
                     			-Dsonar.scm.disabled=true \
                     			-Dsonar.exclusions=node_modules/**,dist/**,coverage/** \
