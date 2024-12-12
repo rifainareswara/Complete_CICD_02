@@ -43,7 +43,7 @@ pipeline {
                 			sh '''
                     			${SONAR_SCANNER_HOME}/bin/sonar-scanner \
                     			-Dsonar.projectKey=sonar-jenkins \
-                    			-Dsonar.projectName=cicdtest \
+                    			-Dsonar.projectName=cicdsonar \
                     			-Dsonar.sources=. \
                     			-Dsonar.host.url=https://sonar.jobseeker.software \
                     			-Dsonar.token=$SONAR_TOKEN \
