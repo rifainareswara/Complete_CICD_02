@@ -37,19 +37,20 @@ pipeline {
 			}
 		}
 		stage('SonarQube Analysis') {
-            		steps {
-                		withSonarQubeEnv(installationName: 'SonarQube', credentialsId: 'jenkins-analysis') {
-                    		sh '''
-                        		${SONAR_SCANNER_HOME}/bin/sonar-scanner \
-                        		-Dsonar.projectKey=${SONAR_PROJECT_KEY} \
-                        		-Dsonar.projectName=${SONAR_PROJECT_NAME} \
-                        		-Dsonar.sources=. \
-                        		-Dsonar.host.url=https://sonar.jobseeker.software \
-                        		-Dsonar.scm.disabled=true
-                    		'''
-                		}
-            		}
-        	}
+    steps {
+        withSonarQubeEnv(installationName: 'SonarQube', credentialsId: 'jenkins-analysis') {
+            sh '''
+                ${SONAR_SCANNER_HOME}/bin/sonar-scanner \
+                -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
+                -Dsonar.projectName=${SONAR_PROJECT_NAME} \
+                -Dsonar.sources=. \
+                -Dsonar.host.url=https://sonar.jobseeker.software \
+                -Dsonar.scm.disabled=true \
+                -Dsonar.javascript.node.maxspace=8192
+            '''
+        }
+    }
+}
 		// stage('Docker Image'){
 		// 	steps {
 		// 		script {
