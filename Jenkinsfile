@@ -42,7 +42,7 @@ pipeline {
             			withSonarQubeEnv('SonarQube') {
                 			sh '''
                     			${SONAR_SCANNER_HOME}/bin/sonar-scanner \
-                    			-Dsonar.projectKey=sonar-jenkins \
+                    			-Dsonar.projectKey=cicdsonar \
                     			-Dsonar.projectName=cicdsonar \
                     			-Dsonar.sources=. \
                     			-Dsonar.host.url=https://sonar.jobseeker.software \
