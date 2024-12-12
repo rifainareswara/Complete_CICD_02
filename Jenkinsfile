@@ -39,15 +39,15 @@ pipeline {
 		stage('SonarQube Analysis') {
     steps {
         withSonarQubeEnv(installationName: 'SonarQube', credentialsId: 'jenkins-analysis') {
-            sh """
-                    sonar-scanner \
-                    -Dsonar.projectKey=cicdsonar \
-                    -Dsonar.projectName=cicdsonar \
-                    -Dsonar.sources=. \
-                    -Dsonar.host.url=https://sonar.jobseeker.software \
-                    -Dsonar.token=sqp_f49245fcd3a6a640ba03003e9524dcddae3ea7cb \
-                    -Dsonar.scm.disabled=true
-                """
+            sh '''
+                ${SONAR_SCANNER_HOME}/bin/sonar-scanner \
+                -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
+                -Dsonar.projectName=${SONAR_PROJECT_NAME} \
+                -Dsonar.sources=. \
+                -Dsonar.host.url=https://sonar.jobseeker.software \
+                -Dsonar.scm.disabled=true \
+                -Dsonar.javascript.node.maxspace=8192
+            '''
         }
     }
 }
