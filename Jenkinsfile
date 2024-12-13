@@ -43,6 +43,7 @@ pipeline {
                 ${SONAR_SCANNER_HOME}/bin/sonar-scanner \
                 -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
                 -Dsonar.projectName=${SONAR_PROJECT_NAME} \
+		-Dsonar.token=sqp_dc71bb0a5041b6b0d18ad864141a16a473cecb84 \
                 -Dsonar.sources=. \
                 -Dsonar.host.url=https://sonar.jobseeker.software \
                 -Dsonar.scm.disabled=true \
