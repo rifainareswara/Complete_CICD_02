@@ -9,6 +9,7 @@ pipeline {
 		SONAR_PROJECT_KEY = 'cicdsonar'
 		SONAR_SCANNER_HOME = tool 'SonarQubeScanner'	
     		SONAR_PROJECT_NAME = 'cicdsonar'
+		SONARQUBE_CREDENTIALS = credentials('jenkins-analysis')
 		JOB_NAME_NOW = 'cicd02'
 		ECR_REPO = 'iquantawsrepo'
 		IMAGE_TAG = 'latest'
@@ -36,22 +37,35 @@ pipeline {
 				sh 'npm install'		
 			}
 		}
-		stage('SonarQube Analysis') {
-    steps {
-        withSonarQubeEnv(installationName: 'SonarQube', credentialsId: 'jenkins-analysis') {
-            sh '''
-                ${SONAR_SCANNER_HOME}/bin/sonar-scanner \
-                -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
-                -Dsonar.projectName=${SONAR_PROJECT_NAME} \
-		-Dsonar.token=sqp_dc71bb0a5041b6b0d18ad864141a16a473cecb84 \
-                -Dsonar.sources=. \
-                -Dsonar.host.url=https://sonar.jobseeker.software \
-                -Dsonar.scm.disabled=true \
-                -Dsonar.javascript.node.maxspace=8192
-            '''
+		stage('SAST SonarQube') {
+            agent {
+              docker {
+                  image 'sonarsource/sonar-scanner-cli:latest'
+                  args '--network host -v ".:/usr/src" --entrypoint='
+              }
+            }
+            steps {
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                    sh 'sonar-scanner -Dsonar.projectKey=cicdsonar -Dsonar.qualitygate.wait=true -Dsonar.sources=. -Dsonar.host.url=https://sonar.jobseeker.software -Dsonar.token=$SONARQUBE_CREDENTIALS' 
+                }
+            }
         }
-    }
-}
+// 		stage('SonarQube Analysis') {
+//     steps {
+//         withSonarQubeEnv(installationName: 'SonarQube', credentialsId: 'jenkins-analysis') {
+//             sh '''
+//                 ${SONAR_SCANNER_HOME}/bin/sonar-scanner \
+//                 -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
+//                 -Dsonar.projectName=${SONAR_PROJECT_NAME} \
+// 		-Dsonar.token=sqp_dc71bb0a5041b6b0d18ad864141a16a473cecb84 \
+//                 -Dsonar.sources=. \
+//                 -Dsonar.host.url=https://sonar.jobseeker.software \
+//                 -Dsonar.scm.disabled=true \
+//                 -Dsonar.javascript.node.maxspace=8192
+//             '''
+//         }
+//     }
+// }
 		// stage('Docker Image'){
 		// 	steps {
 		// 		script {
