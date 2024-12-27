@@ -31,7 +31,7 @@ pipeline {
             steps{
                 withSonarQubeEnv('SonarQube') {
                   sh """
-                    ${SCANNER_HOME}/bin/sonar-scanner \
+                    sudo ${SCANNER_HOME}/bin/sonar-scanner \
                     -Dsonar.projectKey=test \
                     -Dsonar.sources=."""
                 }
