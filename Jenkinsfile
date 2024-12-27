@@ -6,9 +6,10 @@ pipeline {
 		nodejs 'NodeJS'
 	}
 	environment {
+		SCANNER_HOME = tool 'SonarQubeScanner'
 		SONAR_PROJECT_KEY = 'cicdsonar'
 		SONAR_SCANNER_HOME = tool 'SonarQubeScanner'	
-    		SONAR_PROJECT_NAME = 'cicdsonar'
+    	SONAR_PROJECT_NAME = 'cicdsonar'
 		SONARQUBE_CREDENTIALS = credentials('jenkins-analysis')
 		JOB_NAME_NOW = 'cicd02'
 		ECR_REPO = 'iquantawsrepo'
@@ -37,19 +38,41 @@ pipeline {
 				sh 'npm install'		
 			}
 		}
-		stage('SAST SonarQube') {
-            agent {
-              docker {
-                  image 'sonarsource/sonar-scanner-cli:latest'
-                  args '--network host -v ".:/usr/src" --entrypoint='
-              }
-            }
-            steps {
-                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    sh 'sonar-scanner -Dsonar.projectKey=cicdsonar -Dsonar.qualitygate.wait=true -Dsonar.sources=. -Dsonar.host.url=https://sonar.jobseeker.software -Dsonar.token=$SONARQUBE_CREDENTIALS' 
+        stage("SonarQube analysis"){
+            steps{
+                withSonarQubeEnv('SonarQube') {
+                  sh """
+                    ${SCANNER_HOME}/bin/sonar-scanner \
+                    -Dsonar.projectKey=test \
+                    -Dsonar.sources=."""
                 }
             }
         }
+        stage("Quality Gate") {
+            steps {
+                timeout(time: 1, unit: 'HOURS') {
+                script{
+                    def qg = waitForQualityGate()
+                    if (qg.status != 'OK') {
+                        error "Pipeline aborted due to quality gate failure: ${qg.status}"
+                    }
+                    echo 'Quality Gate Passed' 
+                    }   
+                }
+            }
+		// stage('SAST SonarQube') {
+        //     agent {
+        //       docker {
+        //           image 'sonarsource/sonar-scanner-cli:latest'
+        //           args '--network host -v ".:/usr/src" --entrypoint='
+        //       }
+        //     }
+        //     steps {
+        //         catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+        //             sh 'sonar-scanner -Dsonar.projectKey=cicdsonar -Dsonar.qualitygate.wait=true -Dsonar.sources=. -Dsonar.host.url=https://sonar.jobseeker.software -Dsonar.token=$SONARQUBE_CREDENTIALS' 
+        //         }
+        //     }
+        // }
 // 		stage('SonarQube Analysis') {
 //     steps {
 //         withSonarQubeEnv(installationName: 'SonarQube', credentialsId: 'jenkins-analysis') {
