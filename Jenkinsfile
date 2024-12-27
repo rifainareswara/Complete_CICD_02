@@ -31,12 +31,16 @@ pipeline {
             steps {
                 withSonarQubeEnv('SonarQube') {
                     sh '''
-                        sudo ${SCANNER_HOME}/bin/sonar-scanner \
+                        ${SCANNER_HOME}/bin/sonar-scanner \
                         -Dsonar.projectKey=test \
                         -Dsonar.projectName="Test Project" \
                         -Dsonar.sources=. \
                         -Dsonar.host.url=https://sonar.jobseeker.software \
-                        -Dsonar.token=sqp_baa242570b049e42980a5dfaa1fb101545aa6ee7
+                        -Dsonar.token=sqp_baa242570b049e42980a5dfaa1fb101545aa6ee7 \
+                        -Dsonar.userHome=/home/ubuntu/.sonar \
+                        -Dsonar.sonar.qualitygate.wait=true \
+                        -Dsonar.qualitygate.timeout=300 \
+                        -Dsonar.verbose=true
                     '''
                 }
             }
