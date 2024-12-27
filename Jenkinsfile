@@ -33,7 +33,9 @@ pipeline {
                   sh """
                     sudo ${SCANNER_HOME}/bin/sonar-scanner \
                     -Dsonar.projectKey=test \
-                    -Dsonar.sources=."""
+                    -Dsonar.sources=.
+					-Dsonar.host.url=https://sonar.jobseeker.software
+					"""
                 }
             }
         }
