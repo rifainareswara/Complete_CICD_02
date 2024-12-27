@@ -7,7 +7,6 @@ pipeline {
     }
     environment {
         SCANNER_HOME = tool 'SonarQubeScanner'
-        SONAR_TOKEN = credentials('sonarqube-token')
     }
     stages {
         stage('Checkout') {
@@ -31,15 +30,14 @@ pipeline {
         stage("SonarQube analysis") {
             steps {
                 withSonarQubeEnv('SonarQube') {
-                    withCredentials([string(credentialsId: 'sonarqube-token', variable: 'SONAR_TOKEN')]) {
-                        sh '''
-                            sudo ${SCANNER_HOME}/bin/sonar-scanner \
-                            -Dsonar.projectKey=test \
-                            -Dsonar.sources=. \
-                            -Dsonar.host.url=https://sonar.jobseeker.software \
-                            -Dsonar.login=$SONAR_TOKEN
-                        '''
-                    }
+                    sh '''
+                        sudo ${SCANNER_HOME}/bin/sonar-scanner \
+                        -Dsonar.projectKey=test \
+                        -Dsonar.projectName="Test Project" \
+                        -Dsonar.sources=. \
+                        -Dsonar.host.url=https://sonar.jobseeker.software \
+                        -Dsonar.token=sqp_baa242570b049e42980a5dfaa1fb101545aa6ee7
+                    '''
                 }
             }
         }
