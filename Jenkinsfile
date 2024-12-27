@@ -7,6 +7,7 @@ pipeline {
 	}
 	environment {
 		SCANNER_HOME = tool 'SonarQubeScanner'
+		SONAR_TOKEN = credentials('sonarqube-token')
 	}
 	stages {
 		stage('Checkout') {
@@ -35,6 +36,7 @@ pipeline {
                     -Dsonar.projectKey=test \
                     -Dsonar.sources=.
 					-Dsonar.host.url=https://sonar.jobseeker.software
+					-Dsonar.login=${SONAR_TOKEN}
 					"""
                 }
             }
